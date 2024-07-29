@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "es2015",
+    "module": "es6",
     "moduleResolution": "classic",
     "useDefineForClassFields": true
   }

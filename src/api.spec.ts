@@ -33,12 +33,12 @@ const tests = [
     withDefaults: false
   },
 ].map(r => ({...r, input: `./testfiles/${r.input}`, output: `./testfiles/${r.output}`}));
-
+const override = false;
 describe('Creation', () => {
   tests.forEach(test => {
     it('should create ' + test.input, () => {
       const inputResult = inspect({tsConfigPath: test.input, withDefaults: test.withDefaults});
-      if(!fs.existsSync(test.output)) {
+      if(override || !fs.existsSync(test.output)) {
         console.log('Result not exists: ' + test.output);
         fs.writeFileSync(test.output, JSON.stringify(inputResult.tsConfig?.generated, null, 2));
       }
