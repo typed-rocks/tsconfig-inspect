@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest'
-import {inspect} from "./api";
+import {inspect, TSConfig} from "./api";
 import fs from 'fs';
 const tests = [
   {
@@ -37,13 +37,13 @@ const override = false;
 describe('Creation', () => {
   tests.forEach(test => {
     it('should create ' + test.input, () => {
-      const inputResult = inspect({tsConfigPath: test.input, withDefaults: test.withDefaults});
+      const inputResult: {generated: TSConfig} = inspect({tsConfigPath: test.input, withDefaults: test.withDefaults}) as {generated: TSConfig};
       if(override || !fs.existsSync(test.output)) {
         console.log('Result not exists: ' + test.output);
-        fs.writeFileSync(test.output, JSON.stringify(inputResult.tsConfig?.generated, null, 2));
+        fs.writeFileSync(test.output, JSON.stringify(inputResult.generated, null, 2));
       }
       const expected = JSON.parse(fs.readFileSync(test.output, 'utf-8'));
-      expect(inputResult.tsConfig?.generated).toEqual(expected);
+      expect(inputResult.generated).toEqual(expected);
     });
   })
 
