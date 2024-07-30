@@ -1,6 +1,6 @@
 {
   "name": "tsconfig-inspect",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "./dist/cli.js",
   "module": "./dist/cli.mjs",
