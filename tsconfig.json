@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "paths": {
-      "first": ["./second"]
-    }
-  },
+    "module": "NodeNext"
+  }
 }
