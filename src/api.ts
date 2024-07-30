@@ -181,6 +181,7 @@ export type CliArgs = {
   tsConfigPath: string;
   withDefaults?: boolean;
   showFiles?: boolean;
+  showColor?: boolean;
 };
 
 export function inspect(config: CliArgs):
@@ -224,9 +225,7 @@ export function inspect(config: CliArgs):
     return tsConfigRootPropertiesWithStrings;
   }
 
-  const providedKeys = new Set(
-    Object.keys(tsConfigRootPropertiesWithStrings.compilerOptions),
-  );
+  const providedKeys = new Set(Object.keys(parseResult.options));
   const withAndWithoutDefaults: {
     withDefaults: Record<string, CompilerOptionsValue>;
     withoutDefaults: Record<string, CompilerOptionsValue>;
@@ -241,6 +240,7 @@ export function inspect(config: CliArgs):
       const defaultValue = computedOptions[optionKey].computeValue(
         {} as CompilerOptions,
       );
+
       withAndWithoutDefaults.withDefaults[option] = implied;
       if (implied !== defaultValue) {
         withAndWithoutDefaults.withoutDefaults[option] = implied;

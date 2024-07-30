@@ -28,6 +28,16 @@ program
     "enable or disable showing to resolve included files (true/false)",
     true,
   )
+  .option("--noColor", "when set disable the colors", false)
+  .addHelpText(
+    "afterAll",
+    `
+    
+What are the colors in the output? 
+- blue: Non-default values which were impacted by the provided configuration.
+- green: Default values which were not impacted by the provided configuration.
+- white: Your inputs from the tsconfig file.`,
+  )
   .parse(process.argv);
 
 const options = program.opts();
@@ -43,10 +53,12 @@ function loadArgs(): CliArgs | undefined {
     options["defaults"] !== true ? options["defaults"] === "true" : true;
   const showFiles =
     options["showFiles"] !== true ? options["showFiles"] === "true" : true;
+  const showColor = !options["noColor"];
   return {
     tsConfigPath: path.resolve(tsConfigPath),
     withDefaults: withDefaults,
     showFiles: showFiles,
+    showColor,
   };
 }
 
@@ -85,11 +97,13 @@ const output = generatedStringedLine
     const isGenerated = generatedKeys.some((newKey) =>
       line.trim().startsWith(`"${newKey}":`),
     );
-    if (isGenerated) {
-      //return chalk.blue(line);
-    }
-    if (isNewKey) {
-      return chalk.green(line);
+    if (config.showColor) {
+      if (isGenerated) {
+        return chalk.blue(line);
+      }
+      if (isNewKey) {
+        return chalk.green(line);
+      }
     }
     return line;
   })
