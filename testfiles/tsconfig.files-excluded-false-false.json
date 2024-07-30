@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "es6",
+    "moduleResolution": "classic"
+  },
+  "exclude": [
+    "not-show.ts"
+  ]
+}

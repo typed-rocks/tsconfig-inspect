@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "es6",
+    "moduleResolution": "classic"
+  },
+  "files": [
+    "./testinput.ts"
+  ],
+  "exclude": [
+    "not-show.ts"
+  ]
+}

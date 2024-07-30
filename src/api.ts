@@ -149,10 +149,7 @@ function getTsConfigWithStrings(tsConfigPath: string): TsConfigOrError {
   return convertToTSConfig(parseResult, tsConfigPath, sys);
 }
 
-function compilerOptionsWithEnumValues(output: { config?: any; error?: ts.Diagnostic }, config: {
-  tsConfigPath: string;
-  withDefaults: boolean
-}) {
+function compilerOptionsWithEnumValues(output: { config?: any; error?: ts.Diagnostic }, config: CliArgs) {
   const configFile = output.config;
   const dir = path.dirname(config.tsConfigPath);
   const tsConfigWithEnumValues = parseJsonConfigFileContent(configFile, sys, dir);
@@ -165,7 +162,9 @@ function hasDiagnosticError(input: TsConfigOrError): input is { diagnostics: Dia
 }
 
 
-export function inspect(config: { tsConfigPath: string, withDefaults: boolean }):
+export type CliArgs = { tsConfigPath: string, withDefaults?: boolean, showFiles?: boolean };
+
+export function inspect(config: CliArgs):
   {
     generated: TSConfig,
     realCompilerConfig: CompilerOptions
@@ -212,6 +211,7 @@ export function inspect(config: { tsConfigPath: string, withDefaults: boolean })
       }
     }
   }
+
   const implied = config.withDefaults ? withAndWithoutDefaults.withDefaults : withAndWithoutDefaults.withoutDefaults;
   let compilerOptions: CompilerOptions = {...tsConfigRootPropertiesWithStrings.compilerOptions, ...implied};
   if (config.withDefaults) {
@@ -221,8 +221,10 @@ export function inspect(config: { tsConfigPath: string, withDefaults: boolean })
 
   clearUndefined(compilerOptions);
   mapEnums(compilerOptions);
+  const hideFiles = config.showFiles ? {} : {files: output.config.files, exclude: output.config.exclude, include: output.config.include};
   const resultingTsConfig = {
     ...tsConfigRootPropertiesWithStrings,
+    ...hideFiles,
     compilerOptions: {...compilerOptions, ...tsConfigRootPropertiesWithStrings.compilerOptions}
   };
   clearUndefined(resultingTsConfig);
@@ -232,6 +234,28 @@ export function inspect(config: { tsConfigPath: string, withDefaults: boolean })
     realCompilerConfig: compilerOptionsInTsConfigWithEnums
   };
 }
+
+type NestedObject = {
+  [key: string]: any;
+};
+
+export function getAllKeys(obj: NestedObject): string[] {
+  let keys: string[] = [];
+
+  // Recursive function to traverse and collect keys
+  function traverse(currentObj: NestedObject) {
+    for (const key in currentObj) {
+      keys.push(key);
+      if (currentObj[key] !== null && typeof currentObj[key] === 'object') {
+        traverse(currentObj[key]);
+      }
+    }
+  }
+
+  traverse(obj);
+  return keys;
+}
+
 
 // Function to sort keys based on the array
 function sortObjectByKeysArray(obj: CompilerOptions, keys: (keyof CompilerOptions)[]) {

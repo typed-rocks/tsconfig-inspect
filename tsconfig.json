@@ -1,4 +1,8 @@
 {
-  "extends": "./tsconfig-extend.json",
-  "exclude": ["src/*.spec.ts"]
+  "compilerOptions": {
+    "module": "NodeNext",
+    "paths": {
+      "first": ["./second"]
+    }
+  },
 }

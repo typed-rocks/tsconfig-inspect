@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "strict": true,
+    "paths": {
+      "a_path": ["./relative"]
+    }
+  }
+}
